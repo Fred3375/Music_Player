@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -29,12 +30,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tvTrace"
+            android:id="@+id/tvSongTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trace"
+            android:text="Lecture en cours"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,10 +50,11 @@
                 android:layout_weight="1"
                 android:text="00:00"
                 android:textAlignment="center"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
 
             <SeekBar
-                android:id="@+id/seekBar"
+                android:id="@+id/sbPosition"
                 style="@android:style/Widget.DeviceDefault.SeekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,32 +74,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnPrevious"
+            <ImageButton
+                android:id="@+id/btnPrev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="Previous"
-                app:icon="@drawable/ic_skip_previous_white_36" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="0"
+                android:background="@color/background"
+                android:contentDescription="Previous song"
+                app:srcCompat="@drawable/ic_skip_previous_white_36" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="0"
+                android:background="@color/background"
                 android:contentDescription="Play / Pause"
-                app:icon="@drawable/ic_play_arrow_white_48" />
+                app:srcCompat="@drawable/ic_play_arrow_white_48" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="Next"
-                app:icon="@drawable/ic_skip_next_white_36" />
-
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="0"
+                android:background="@color/background"
+                android:contentDescription="Next song"
+                app:srcCompat="@drawable/ic_skip_next_white_36" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
