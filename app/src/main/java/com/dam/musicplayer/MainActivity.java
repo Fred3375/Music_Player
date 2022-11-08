@@ -3,6 +3,7 @@ package com.dam.musicplayer;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -96,11 +97,46 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSong() {
         getAudioFiles();
+
+        // gestion sb
+        sbPosition.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mediaPlayer.seekTo(seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                currentPos = seekBar.getProgress();
+                mediaPlayer.seekTo((int)currentPos);
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                // if(sbPosition.is) // TODO
+                if(currentArrayPos < songArrayList.size()-1) currentArrayPos++;
+                else currentArrayPos = 0;
+                playSong((currentArrayPos));
+
+            }
+        });
+
+        if (!songArrayList.isEmpty()){
+            playSong(currentArrayPos);
+        }
     }
 
     private void playSong(int pos){
         try {
             mediaPlayer.reset();
+            sbPosition.setProgress(0);
             mediaPlayer.setDataSource(this, songArrayList.get(pos).getSongUri());
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -156,8 +192,9 @@ public class MainActivity extends AppCompatActivity {
     public void getAudioFiles(){
         ContentResolver contentResolver = getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        String where = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        String[] select = {"TITLE", "ARTIST", "DURATION", "DATA", "ALBUM_ID"};
+        Cursor cursor = contentResolver.query(uri, null , where, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
@@ -168,7 +205,11 @@ public class MainActivity extends AppCompatActivity {
                 long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
                 Uri coverFolder = Uri.parse("content://media/external/audio/albumart");
                 Uri albumArtUri = ContentUris.withAppendedId(coverFolder, albumId);
-                Log.i("DEBUG", title + " : " + albumArtUri);
+//                Log.i("DEBUG", title + " : " + albumArtUri);
+//                Log.i("DEBUG", " Alarm ? " + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_ALARM)));
+//                Log.i("DEBUG", " Ringtone ? " + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_RINGTONE)));
+//                Log.i("DEBUG", " Music ? " + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_MUSIC)));
+//                Log.i("DEBUG", " Music ? " + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS)));
 
                 // remplaissage row
                 ModelSong modelSong = new ModelSong();
@@ -211,7 +252,34 @@ public class MainActivity extends AppCompatActivity {
         if (checkPermission()){
             setSong();
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mediaPlayer != null) mediaPlayer.release();
+    }
 
+    public void btnPlayOnClick(View view){
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            btnPlay.setImageResource(R.drawable.ic_play_arrow_white_48);
+        }
+        else {
+            mediaPlayer.start();
+            btnPlay.setImageResource(R.drawable.ic_pause_white_48);
+        }
+
+    }
+
+    public void btnPrevOnClick(View view){
+        if (currentArrayPos > 0) currentArrayPos--;
+        else currentArrayPos = songArrayList.size() - 1;
+        playSong(currentArrayPos);
+    }
+    public void btnSuivOnClick(View view){
+        if (currentArrayPos < songArrayList.size() - 1) currentArrayPos++;
+        else currentArrayPos = 0;
+        playSong(currentArrayPos);
     }
 }
