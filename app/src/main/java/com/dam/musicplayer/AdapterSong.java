@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,24 +37,41 @@ public class AdapterSong extends RecyclerView.Adapter<AdapterSong.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    /* VERSION AVEC INTERFACE PERSO  */
+                    // getAdapterPosition from RecyclerView.ViewHolder
                     onItemClickListener.onItemClick(getAdapterPosition(), view);
+
+                    /* VERSION AVEC INTERFACE STD */
+                    // onItemClickListener.onItemClick(AdapterSong.this, view, AdapterSong.getAdapterPosition() );
                 }
             });
         }
     }
 
+    /* VERSION AVEC INTERFACE PERSO DEBUT */
     // nested interface declaration
     public interface OnItemClickListener {
         void onItemClick(int pos, View v);
     }
 
-    //
+    // an interface object
     public OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
     }
+    /* VERSION AVEC INTERFACE PERSO FIN */
+    /* ---------------------------------------------------------------------- */
+    /* VERSION AVEC INTERFACE STD */
+//    private AdapterView.OnItemClickListener onItemClickListener; // TODO
 
+/*
+    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
+*/
+
+    /* ---------------------------------------------------------------------- */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

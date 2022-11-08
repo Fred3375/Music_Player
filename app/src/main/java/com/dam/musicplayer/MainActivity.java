@@ -191,6 +191,14 @@ public class MainActivity extends AppCompatActivity {
                 playSong(pos);
             }
         }));
+/*
+        adapterSong.setOnItemClickListener((new AdapterSong.OnItemClickListener() {
+            @Override
+            public void onItemClick(int pos, View v) {
+                playSong(pos);
+            }
+        }));
+*/
     }
 
     @Override
